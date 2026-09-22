@@ -3,4 +3,12 @@ __pycache__/
 output/
 tmp/
 .env
+.env.*
+!.env.example
+.DS_Store
+*.pdf
+*.docx
+*.zip
+*.key
+*.pem
 private/

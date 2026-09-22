@@ -14,6 +14,8 @@ else
   TASK_PYTHON="python3"
 fi
 case "${1:-}" in
+  build) exec "$TASK_PYTHON" "$TASK_ROOT/preserve.py" "$@" ;;
+  legacy) shift; exec "$TASK_PYTHON" "$TASK_ROOT/lab.py" "$@" ;;
   suite) shift; exec "$TASK_PYTHON" "$TASK_ROOT/signal_suite.py" "$@" ;;
   trial) shift; exec "$TASK_PYTHON" "$TASK_ROOT/trial_ledger.py" "$@" ;;
   benchmark) shift; exec "$TASK_PYTHON" "$TASK_ROOT/benchmark.py" "$@" ;;

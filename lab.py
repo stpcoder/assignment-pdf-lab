@@ -409,7 +409,8 @@ def main():
     b.add_argument("--out", help="New output directory (must not exist)")
     b.add_argument("--scheme", choices=("invisible", "white"), default="invisible")
     b.add_argument("--soffice", help="Explicit LibreOffice executable")
-    b.add_argument("--profiles", nargs="+", choices=PROFILES, default=list(PROFILES), help="Variants to create")
+    b.add_argument("--profiles", nargs="+", choices=PROFILES, default=["native-alias"], help="Historical variants to create")
+    b.add_argument("--experimental", action="store_true", help="Explicitly allow historical experiments")
     b.add_argument("--code-font", help="Replace D2Coding Latin font in a temporary DOCX copy (e.g. Menlo)")
     b.set_defaults(func=build)
     s = sub.add_parser("scan", help="Read-only exact-canary scan; does not establish AI authorship")
@@ -418,6 +419,8 @@ def main():
     s.add_argument("paths", nargs="+")
     s.set_defaults(func=scan)
     args = parser.parse_args()
+    if args.command == 'build' and not args.experimental:
+        parser.error('Historical builder requires --experimental. Use run.sh build or launcher.py for the original-preserving default.')
     try:
         args.func(args)
     except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as exc:
