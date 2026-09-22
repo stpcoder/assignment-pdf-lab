@@ -1,5 +1,7 @@
 # ASSN1 PDF 실험 결과
 
+> 이 문서는 2026-09-22의 과거 실험 기록입니다. 가시적 예시를 포함한 당시 방식과 명령을 보존하며, 현재 기본 배포본은 아닙니다. 현재 사용법은 [README](README.md), 경과는 [한국어 실험 이력](HISTORY_KO.md)을 보세요. 과거 생성 명령은 이제 `--experimental`이 필요합니다.
+
 > 최신 Gemini 보완 실험과 실행 도구 설명은 `GEMINI_FOLLOWUP.md`, `PORTABLE_GUIDE.md`에 있습니다. 이 문서의 이전 표본은 당시 결과로 보존합니다.
 실행일: 2026-09-22 KST. 검사한 묶음: `output/pdf/20260921T175107Z-cde81a`.
 

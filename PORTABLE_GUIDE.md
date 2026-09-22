@@ -1,88 +1,53 @@
-# DOCX → PDF 실행 방법
+# 원본 과제를 다시 PDF로 만드는 방법
 
-이 도구는 Python 프로그램이다. `.command`와 `.cmd`는 Python을 실행하는 바로가기 스크립트이며, Python·LibreOffice·Poppler가 내장된 독립 `.app`/`.exe`는 아니다. 현재 Mac에서는 원본 DOCX를 넣는 전체 과정을 실행해 확인했다. Windows 스크립트는 제공하지만 이 Mac에서 Windows 실행 검증을 했다고 주장하지 않는다.
+현재 기본 프로필은 `native-hidden`이다. 함수명 치환과 숨은 검사 문자열만 사용하고 사람이 볼 수 있는 새 예시는 넣지 않는다. 기존 문서를 고칠 때는 수정한 DOCX 또는 그 문서에서 새로 내보낸 깨끗한 PDF를 선택한다. 이미 표식이 들어간 PDF를 입력하면 중복 삽입을 거부한다.
 
-새 기본값: `multi-signal`. 이전 함수명 실험은 `--profiles native-alias`로 선택한다. 새 suite 네 방식 전체는 `--profiles vector-local raster-docstring hidden-assert multi-signal`로 만든다.
+## 기준본 선택
 
-## 처리 순서
+PDF를 입력하면 그 파일을 바이트 단위로 복사해 `baseline.pdf`로 보관하고 후처리한다. Word 화면의 배치를 기준으로 삼으려면 Word에서 PDF로 내보낸 결과를 입력한다. 이 경로는 글꼴 교체나 재조판을 하지 않는다.
 
-```text
-DOCX 원본 (수정하지 않음)
-  → 임시 변환 사본 (필요한 경우 코드 글꼴 보정)
-  → LibreOffice의 PDF export
-  → baseline.pdf 보존
-  → 선택한 PDF 후처리
-  → 모든 페이지 렌더링 / 픽셀·본문 비교 / 네 추출 경로 검사
-  → 날짜별 새 폴더 + instructor-only/manifest.json
-```
-
-PDF를 입력하면 LibreOffice 변환을 건너뛰고 바로 기준본 보존과 후처리를 한다. Word의 배치를 최대한 유지하려면 Word에서 직접 내보낸 PDF를 입력하는 편이 낫다. LibreOffice 변환은 글꼴·줄바꿈·페이지 배치가 Word와 달라질 수 있다. 원본의 D2Coding 밑줄 문제 때문에 Mac에서는 임시 사본에 Menlo를, Windows에서는 Courier New를 기본 지정한다. 실제 대체 글꼴과 렌더링 결과를 확인해야 한다.
-
-`native-alias`는 화면을 유지하면서 추출 함수명만 `paint_stairs`로 바꾸는 실험이다. **Gemini Flash에서는 이 보완 뒤에도 원래 `print_stairs`가 출력되었으므로 Gemini 차단 기능이라고 부르지 않는다.** `visual-comment`는 회색의 작은 코드 주석 지시를 하단에 추가하는 별도 실험이다. 이쪽은 화면이 의도적으로 달라지며 사람도 읽을 수 있다.
-
-PDF 생성에는 AI를 호출하지 않는다. 모델 검증 명령을 따로 실행하거나 브라우저에 직접 업로드할 때만 모델 제공자에게 파일이 전달된다.
+DOCX를 입력하면 현재 자동 경로는 LibreOffice가 PDF를 만든 뒤 그 결과를 기준으로 삼는다. DOCX의 글꼴 지정을 자동으로 바꾸지 않는다. 변환기와 설치 글꼴에 따라 Word와 다른 줄바꿈이나 글리프 문제가 생길 수 있으므로 새 환경에서는 기준본을 눈으로 확인해야 한다. 이번 원본에서도 LibreOffice의 D2Coding 밑줄 표현 문제가 관찰됐다. Word의 내보내기와 후처리 경로를 별도로 확인한 이유다. 전후 픽셀 검사는 PDF 후처리의 보존을 검증하며 서로 다른 변환기의 조판이 같다는 뜻은 아니다.
 
 ## Mac
 
-`PDF만들기.command`를 더블클릭하면 입력 파일 선택 창을 연다. DOCX 또는 PDF를 고르면 새 `multi-signal` 결합본을 만든다. 각 단독 방식과 실제 결과는 SIGNAL_SUITE.md를 참고한다. Finder에서 스크립트가 바로 실행되지 않으면 터미널에서 아래처럼 실행한다.
+`PDF만들기.command`를 더블클릭하면 파일 선택 창이 열린다. `다시만들기.command`도 같은 경로를 실행한다. 특정 사용자의 Downloads 파일이나 모든 이전 실험본을 자동 선택하지 않는다.
 
 ```bash
-cd '/Users/taehoje/Documents/개인 진행 프로젝트/assignment-pdf-lab'
-./PDF만들기.command '/Users/taehoje/Downloads/ASSN1_en_v2.docx'
+./PDF만들기.command '/경로/과제.docx'
+./PDF만들기.command '/경로/깨끗한과제.pdf'
 ```
 
-화면 주석 실험본만 만들기:
+프로젝트의 `.venv`가 있으면 그 Python을 사용하고, 없으면 설치된 Codex 번들 Python 또는 `python3`를 찾는다. 일반 환경에는 Python 3.10 이상과 `requirements.txt`의 라이브러리, Poppler의 `pdftotext`와 `pdftoppm`이 필요하다. DOCX 자동 변환에는 LibreOffice가 필요하며, 설치된 Mac 앱과 Codex 번들 경로를 탐색한다.
 
 ```bash
-./PDF만들기.command '/경로/과제.docx' --profiles visual-comment
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python launcher.py '/경로/과제.docx' --check
 ```
-
-둘 다 별도 파일로 만들기:
-
-```bash
-./PDF만들기.command '/경로/과제.docx' --profiles native-alias visual-comment
-```
-
-기존 `다시만들기.command`는 기존 동작을 유지한다. 인수를 생략하면 원래 Downloads의 DOCX를 사용하고 모든 실험 변형을 만든다. 새 파일을 선택하고 싶으면 `PDF만들기.command`를 쓴다.
-
-현재 Mac은 Codex 번들 Python과 이미 설치된 라이브러리를 이용한다. 다른 Mac에서는 Python 3.10 이상, LibreOffice, Poppler가 필요하다. 기존 Homebrew를 쓰는 환경이라면 `brew install poppler libreoffice`로 관련 도구를 준비할 수 있다. 프로젝트의 `.venv`에 `requirements.txt`도 설치한다.
 
 ## Windows
 
-프로젝트 폴더의 `MakePDF.cmd`를 더블클릭하면 파일 선택 창을 연다. DOCX/PDF를 파일 위로 드래그해 경로를 전달할 수도 있다. 공백이 있는 경로는 명령줄에서 큰따옴표로 감싼다.
-
-```bat
-MakePDF.cmd "C:\Assignments\ASSN1_en_v2.docx"
-MakePDF.cmd "C:\Assignments\ASSN1_en_v2.docx" --profiles visual-comment
-```
-
-필요한 구성 요소:
-
-1. Python 3.10 이상과 `py` 실행기. [Python 공식 다운로드](https://www.python.org/downloads/windows/)
-2. DOCX 변환을 위한 [LibreOffice](https://www.libreoffice.org/download/download-libreoffice/). 표준 Program Files 설치 경로를 자동 탐색한다.
-3. Poppler의 `pdftotext.exe`, `pdftoppm.exe`. 이미 Conda를 사용하는 환경이면 conda-forge의 Poppler 패키지를 사용할 수 있다. 실행 파일이 있는 폴더를 PATH 또는 `POPPLER_BIN` 환경변수로 지정한다.
-4. Python 라이브러리:
+`MakePDF.cmd`를 더블클릭하거나 DOCX/PDF를 그 파일 위로 끌어놓으면 된다. Python 실행기 `py`, Python 라이브러리, Poppler가 필요하다. DOCX 자동 변환에는 LibreOffice를 설치한다. 표준 Program Files 경로와 PATH를 탐색하며, Poppler 실행 파일 폴더는 PATH 또는 `POPPLER_BIN`으로 지정한다.
 
 ```bat
 py -3 -m venv .venv
 .venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe launcher.py "C:\Assignments\ASSN1_en_v2.docx" --check
+MakePDF.cmd "C:\Assignments\assignment.docx"
 ```
 
-`.venv`가 있으면 `MakePDF.cmd`가 그 Python을 사용한다. 설치가 빠져 있으면 어떤 항목이 없는지 알리고 멈춘다. 파일 선택기를 사용할 수 없는 Python이라면 명령줄에 파일 경로를 직접 준다.
+Windows용 바로가기는 제공하지만 이번 작업은 Mac에서 실행했다. Windows 실기 검증이나 독립 EXE 패키징을 완료한 것으로 표시하지 않는다. 파일 선택기가 없는 Python에서는 명령줄 인수로 경로를 전달한다.
 
-독립 EXE로 배포하려면 Windows에서 별도 패키징·실행 검증이 필요하다. Python만 묶어도 LibreOffice/Poppler 의존성은 남는다. 이번 결과에는 검증하지 않은 EXE를 포함하지 않았다.
+## 보관과 실패 처리
 
-## 생성 결과와 보관
+성공하면 매번 새 폴더에 `assignment.pdf`, `baseline.pdf`, `instructor-only/manifest.json`을 남긴다. 함수 별칭 `paint_stairs`는 고정값이고 `probe_…`는 실행마다 바뀐다. 실제 사용한 PDF와 같은 폴더의 manifest로 검사해야 한다. 성공한 폴더만 `output/LATEST`에 기록된다.
 
-`output/pdf/날짜-식별자/`에 새 파일을 만든다. 기존 결과를 덮어쓰지 않는다. 최신 경로는 `output/LATEST`에 저장된다.
+현재 후처리는 마지막 페이지의 빈 공간을 요구하지 않는다. 페이지 수가 늘거나 하단에 원문이 있어도 모든 픽셀이 같은지 검사한다. 회전·좌표 오프셋·암호화 PDF, 이미지뿐인 PDF, 해석할 수 없는 대상 글꼴, 필수 함수명이 없는 다른 과제는 자동 보정하지 않고 중단할 수 있다.
 
-- `baseline.pdf`: 변환 후의 깨끗한 기준본
-- 선택한 실험 PDF: 후처리된 사본
-- `instructor-only/manifest.json`: 입력·출력 해시, 해당 빌드의 표식, 시각적·추출 검사
-- `instructor-only/renders`: 검토용 전 페이지 이미지
-- `instructor-only/extracted`: 추출 경로별 텍스트
+과거 실험은 다음처럼 명시적으로 실행한다. 가시적 예시나 규칙 변경이 포함될 수 있으므로 현재 배포본과 구별해야 한다. 글꼴 교체 옵션도 이 실험 경로에서만 허용한다.
 
-`PASS`는 PDF의 생성 검사가 통과했다는 의미다. 특정 AI 모델에서 작동한다는 뜻이 아니다. 모델 결과는 별도 실험 기록을 확인한다. 별도 보고서·정답·manifest·서명키를 학생에게 배포할 필요는 없다.
+```bash
+./PDF만들기.command '/경로/과제.pdf' --experimental --profiles multi-signal
+./run.sh legacy build '/경로/과제.pdf' --experimental --profiles native-alias
+```
 
-현재 후처리는 이 ASSN1의 함수 이름과 구조를 대상으로 한다. 임의의 다른 과제 DOCX를 자동으로 의미 분석해 함정을 만드는 범용 도구는 아니다. 입력 형식이나 함수명이 달라지면 적절한 오류를 내거나 설정·코드를 수정해야 한다.
+PDF 생성과 Git 저장은 AI 호출을 포함하지 않는다. 별도 모델 검증 명령 또는 웹 업로드를 실행해야 해당 제공자에게 과제가 전달된다.

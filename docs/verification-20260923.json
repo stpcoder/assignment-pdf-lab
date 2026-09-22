@@ -1,0 +1,121 @@
+{
+  "date_kst": "2026-09-23",
+  "profile": "native-hidden",
+  "baseline_export": "Microsoft Word for Mac",
+  "page_count": 7,
+  "source_docx_unchanged": true,
+  "render_qa": {
+    "120": {
+      "identical": true,
+      "pages": [
+        {
+          "page": 1,
+          "identical": true
+        },
+        {
+          "page": 2,
+          "identical": true
+        },
+        {
+          "page": 3,
+          "identical": true
+        },
+        {
+          "page": 4,
+          "identical": true
+        },
+        {
+          "page": 5,
+          "identical": true
+        },
+        {
+          "page": 6,
+          "identical": true
+        },
+        {
+          "page": 7,
+          "identical": true
+        }
+      ]
+    },
+    "200": {
+      "identical": true,
+      "pages": [
+        {
+          "page": 1,
+          "identical": true
+        },
+        {
+          "page": 2,
+          "identical": true
+        },
+        {
+          "page": 3,
+          "identical": true
+        },
+        {
+          "page": 4,
+          "identical": true
+        },
+        {
+          "page": 5,
+          "identical": true
+        },
+        {
+          "page": 6,
+          "identical": true
+        },
+        {
+          "page": 7,
+          "identical": true
+        }
+      ]
+    }
+  },
+  "extraction_checks": {
+    "pypdf": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "assert_count_matches": true,
+      "visible_examples_absent": true
+    },
+    "poppler-layout": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "assert_count_matches": true,
+      "visible_examples_absent": true,
+      "body_text_preserved_ignoring_space_and_bullets": true
+    },
+    "poppler-raw": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "assert_count_matches": true,
+      "visible_examples_absent": true,
+      "body_text_preserved_ignoring_space_and_bullets": true
+    },
+    "poppler": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "assert_count_matches": true,
+      "visible_examples_absent": true,
+      "body_text_preserved_ignoring_space_and_bullets": true
+    }
+  },
+  "page_geometry_unchanged": true,
+  "geometry_tolerance_pt": 1e-06,
+  "visual_review_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "model_result": "not_tested",
+  "unit_tests": {
+    "count": 32,
+    "result": "passed",
+    "platform": "macOS"
+  }
+}

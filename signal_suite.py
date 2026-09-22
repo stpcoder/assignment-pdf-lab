@@ -154,8 +154,11 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('command', choices=['build']); p.add_argument('source')
     p.add_argument('--out'); p.add_argument('--profiles', nargs='+', choices=PROFILES, default=list(PROFILES))
+    p.add_argument('--experimental', action='store_true', help='Allow retired visible-panel experiments')
     p.add_argument('--code-font'); p.add_argument('--soffice')
     args=p.parse_args()
+    if not args.experimental:
+        p.error('이전 가시적 예시 실험은 --experimental이 필요합니다. 기본 생성은 launcher.py를 사용하세요.')
     try:
         build(args)
     except (ValueError, RuntimeError, OSError) as exc:

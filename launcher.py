@@ -63,7 +63,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', nargs='?', help='DOCX/PDF path; omitted = file chooser')
     parser.add_argument('--check', action='store_true', help='Print dependency status without creating a PDF')
-    parser.add_argument('--profiles', nargs='+', default=['multi-signal'])
+    parser.add_argument('--profiles', nargs='+', default=['native-hidden'])
+    parser.add_argument('--experimental', action='store_true', help='Allow historical profiles that may change visible content or rules')
     parser.add_argument('--out', help='New output directory')
     parser.add_argument('--code-font', help='Temporary DOCX Latin code font override')
     args = parser.parse_args(argv)
@@ -82,13 +83,23 @@ def main(argv=None):
         status, env = check_dependencies(source)
         if not status['ready']:
             raise ValueError('필요한 구성 요소가 없습니다: ' + ', '.join(status['missing']) + '\n설치 방법: PORTABLE_GUIDE.md')
+        preserved = args.profiles == ['native-hidden']
+        if not preserved and not args.experimental:
+            raise ValueError('이전 실험은 --experimental이 필요합니다. 기본 실행은 원본 화면을 보존합니다.')
+        if preserved and args.code_font:
+            raise ValueError('원본 보존 경로에서는 글꼴을 교체하지 않습니다. 깨끗한 PDF를 입력하세요.')
         from signal_suite import PROFILES as SUITE_PROFILES
         suite = any(p in SUITE_PROFILES for p in args.profiles)
         if suite and not all(p in SUITE_PROFILES for p in args.profiles):
             raise ValueError('새 신호 실험과 이전 실험은 --profiles를 나누어 실행하세요.')
-        command = [sys.executable, str(ROOT / ('signal_suite.py' if suite else 'lab.py')), 'build', str(source), '--profiles', *args.profiles]
+        script = 'preserve.py' if preserved else ('signal_suite.py' if suite else 'lab.py')
+        command = [sys.executable, str(ROOT / script), 'build', str(source)]
+        if not preserved:
+            command += ['--profiles', *args.profiles, '--experimental']
         if source.suffix.lower() == '.docx':
-            command += ['--soffice', status['soffice'], '--code-font', args.code_font or ('Menlo' if sys.platform == 'darwin' else 'Courier New')]
+            command += ['--soffice', status['soffice']]
+            if args.code_font:
+                command += ['--code-font', args.code_font]
         if args.out:
             command += ['--out', str(Path(args.out).expanduser().resolve())]
         print('DOCX 변환(필요한 경우) → PDF 후처리 → 화면·추출 검사', flush=True)
