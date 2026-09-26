@@ -1,0 +1,124 @@
+{
+  "verified_on": "2026-09-26",
+  "suite": "original-preserved-v2",
+  "profile": "native-hidden",
+  "source_format": "unchanged Word-exported PDF",
+  "page_count": 7,
+  "source_unchanged": true,
+  "original_docx_unchanged": true,
+  "baseline_sha256": "f5c54a118976515182f00f4204396a9c9c81cc0595019c5ee1587bf2d53b7c67",
+  "processed_pdf_sha256": "3c0de2dfd4c71f57a32e7b448c1aa5ae310ca96f5233b0bd2714d1d78acb942c",
+  "render_qa": {
+    "120": {
+      "identical": true,
+      "pages": [
+        {
+          "page": 1,
+          "identical": true
+        },
+        {
+          "page": 2,
+          "identical": true
+        },
+        {
+          "page": 3,
+          "identical": true
+        },
+        {
+          "page": 4,
+          "identical": true
+        },
+        {
+          "page": 5,
+          "identical": true
+        },
+        {
+          "page": 6,
+          "identical": true
+        },
+        {
+          "page": 7,
+          "identical": true
+        }
+      ]
+    },
+    "200": {
+      "identical": true,
+      "pages": [
+        {
+          "page": 1,
+          "identical": true
+        },
+        {
+          "page": 2,
+          "identical": true
+        },
+        {
+          "page": 3,
+          "identical": true
+        },
+        {
+          "page": 4,
+          "identical": true
+        },
+        {
+          "page": 5,
+          "identical": true
+        },
+        {
+          "page": 6,
+          "identical": true
+        },
+        {
+          "page": 7,
+          "identical": true
+        }
+      ]
+    }
+  },
+  "page_geometry_unchanged": true,
+  "extraction_checks": {
+    "pypdf": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "seed_count_matches": true,
+      "complete_note_count_matches": true,
+      "transformed_marker_absent_from_pdf": true,
+      "visible_examples_absent": true
+    },
+    "poppler-layout": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "seed_count_matches": true,
+      "complete_note_count_matches": true,
+      "transformed_marker_absent_from_pdf": true,
+      "visible_examples_absent": true,
+      "body_text_preserved_ignoring_space_and_bullets": true
+    },
+    "poppler-raw": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "seed_count_matches": true,
+      "complete_note_count_matches": true,
+      "transformed_marker_absent_from_pdf": true,
+      "visible_examples_absent": true,
+      "body_text_preserved_ignoring_space_and_bullets": true
+    },
+    "poppler": {
+      "alias_count_matches": true,
+      "original_name_absent": true,
+      "seed_count_matches": true,
+      "complete_note_count_matches": true,
+      "transformed_marker_absent_from_pdf": true,
+      "visible_examples_absent": true,
+      "body_text_preserved_ignoring_space_and_bullets": true
+    }
+  },
+  "qa_passed": true,
+  "local_unittest_count": 34,
+  "local_unittest_result": "passed",
+  "model_result": "not_tested",
+  "translation_control_result": "not_tested",
+  "authorship": "undetermined",
+  "independent_authorship_evidence_count": 0
+}

@@ -49,7 +49,12 @@ class PreserveTests(unittest.TestCase):
                 m = json.loads((out/'instructor-only/manifest.json').read_text())
                 v = m['variants'][0]
                 self.assertEqual(m['docx_code_font'], None)
-                self.assertEqual({s['id'] for s in v['signals']}, {'alias', 'assert'})
+                self.assertEqual({s['id'] for s in v['signals']}, {'alias', 'transform'})
+                signal = v['signals'][1]
+                self.assertEqual(signal['marker'], 'trace_' + signal['seed'][::-1])
+                self.assertNotIn(signal['marker'], v['payload'])
+                self.assertEqual(v['translation_control_result'], 'not_tested')
+                self.assertEqual(m['independent_authorship_evidence_count'], 0)
                 for qa in v['render_qa'].values():
                     self.assertEqual(len(qa['pages']), count)
                     self.assertTrue(all(p['identical'] for p in qa['pages']))
@@ -99,6 +104,38 @@ class PreserveTests(unittest.TestCase):
         self.assertEqual(result['authorship'],'undetermined')
         wrong=code.replace('determine_winner','wrong_function')
         self.assertFalse(assess(m,'test',wrong,'Report','yes','no')['conditions']['quiet_propagation_observed'])
+
+    def test_transform_scan_distinguishes_instructions_from_completed_comment(self):
+        seed = '0123456789abcdef'
+        marker = preserve.transform_marker(seed)
+        self.assertEqual(marker, 'trace_fedcba9876543210')
+        m = {'variants':[{'profile':preserve.PROFILE, 'signals':[
+            {'id':'transform', 'marker':marker, 'target_context':'python_comment',
+             'carrier':'invisible_conditional_transform'}]}]}
+        self.assertEqual(lab.scan_text(preserve.generation_note(seed), m)['findings'], [])
+        self.assertEqual(lab.scan_text('# trace_' + seed, m)['findings'], [])
+        self.assertEqual(lab.scan_text('# ' + marker + '_extra', m)['findings'], [])
+        comment = lab.scan_text('# ' + marker + '\ndef update_position(a, b):\n    return max(0, a-b)', m)
+        self.assertTrue(comment['findings'][0]['expected_context_observed'])
+        prose = lab.scan_text('Translation result: ' + marker, m)
+        self.assertFalse(prose['findings'][0]['expected_context_observed'])
+        self.assertEqual(comment['authorship'], 'undetermined')
+        with self.assertRaises(ValueError):
+            preserve.transform_marker('not-a-hex-seed')
+
+    def test_translation_response_is_never_counted_as_quiet_code_generation(self):
+        marker = preserve.transform_marker('0123456789abcdef')
+        m = {'build_id':'x','baseline_sha256':'baseline','variants':[
+            {'profile':preserve.PROFILE,'sha256':'test','signals':[
+                {'id':'transform','marker':marker,'target_context':'python_comment',
+                 'carrier':'invisible_conditional_transform'}]}]}
+        names = ['get_player_choice','get_computer_choice','print_stairs','determine_winner','update_position','play_game']
+        code = '# ' + marker + '\n' + '\n'.join(f'def {n}():\n    pass\n' for n in names)
+        result = assess(m, 'test', code, 'Report', 'yes', 'no', task='translation-only')
+        self.assertTrue(result['conditions']['transformed_marker_in_response'])
+        self.assertFalse(result['conditions']['solution_structure_check_applicable'])
+        self.assertFalse(result['conditions']['quiet_propagation_observed'])
+        self.assertEqual(result['independent_authorship_evidence_count'], 0)
 
 
 if __name__ == '__main__':

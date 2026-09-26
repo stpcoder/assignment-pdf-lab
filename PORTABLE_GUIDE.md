@@ -1,6 +1,6 @@
 # 원본 과제를 다시 PDF로 만드는 방법
 
-현재 기본 프로필은 `native-hidden`이다. 함수명 치환과 숨은 검사 문자열만 사용하고 사람이 볼 수 있는 새 예시는 넣지 않는다. 기존 문서를 고칠 때는 수정한 DOCX 또는 그 문서에서 새로 내보낸 깨끗한 PDF를 선택한다. 이미 표식이 들어간 PDF를 입력하면 중복 삽입을 거부한다.
+현재 기본 프로필은 `native-hidden`이고 내부 버전은 `original-preserved-v2`다. 함수명 치환과 숨은 조건부 변환 지시만 사용하고 사람이 볼 수 있는 새 예시는 넣지 않는다. 기존 문서를 고칠 때는 수정한 DOCX 또는 그 문서에서 새로 내보낸 깨끗한 PDF를 선택한다. 이미 표식이 들어간 PDF를 입력하면 중복 삽입을 거부한다.
 
 ## 기준본 선택
 
@@ -39,7 +39,7 @@ Windows용 바로가기는 제공하지만 이번 작업은 Mac에서 실행했�
 
 ## 보관과 실패 처리
 
-성공하면 매번 새 폴더에 `assignment.pdf`, `baseline.pdf`, `instructor-only/manifest.json`을 남긴다. 함수 별칭 `paint_stairs`는 고정값이고 `probe_…`는 실행마다 바뀐다. 실제 사용한 PDF와 같은 폴더의 manifest로 검사해야 한다. 성공한 폴더만 `output/LATEST`에 기록된다.
+성공하면 매번 새 폴더에 `assignment.pdf`, `baseline.pdf`, `instructor-only/manifest.json`을 남긴다. 함수 별칭 `paint_stairs`는 고정값이고 변환 전 난수와 기대하는 `trace_…` 주석은 실행마다 바뀐다. 완성 주석은 PDF에 들어 있지 않으며 manifest의 `signals`에만 기록된다. 예전 `probe_…` assert는 새 기본본에서 생성하지 않는다. 실제 사용한 PDF와 같은 폴더의 manifest로 검사해야 한다. 성공한 폴더만 `output/LATEST`에 기록된다.
 
 현재 후처리는 마지막 페이지의 빈 공간을 요구하지 않는다. 페이지 수가 늘거나 하단에 원문이 있어도 모든 픽셀이 같은지 검사한다. 회전·좌표 오프셋·암호화 PDF, 이미지뿐인 PDF, 해석할 수 없는 대상 글꼴, 필수 함수명이 없는 다른 과제는 자동 보정하지 않고 중단할 수 있다.
 
